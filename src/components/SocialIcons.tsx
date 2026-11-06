@@ -33,6 +33,8 @@ const SocialIcons = () => {
         className="resume-button"
         href="/resume.pdf"
         target="_blank"
+        rel="noopener noreferrer"
+        aria-label="View Resume PDF"
       >
         <HoverLinks text="RESUME" />
         <span>
