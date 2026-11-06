@@ -3,7 +3,13 @@
   max-width: var(--cMaxWidth);
   margin: auto;
   position: relative;
-  height: var(--vh);
+  min-height: 100svh;
+  height: 100svh;
+  overflow: hidden;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0px;
 }
 .landing-container {
   width: var(--cWidth);
@@ -11,6 +17,8 @@
   height: 100%;
   position: relative;
   max-width: var(--cMaxWidth);
+  z-index: 20;
+  will-change: opacity, transform;
 }
 .landing-circle1 {
   top: 0%;
@@ -158,7 +166,7 @@
 }
 .landing-intro {
   position: absolute;
-  z-index: 9;
+  z-index: 25;
   top: 12%;
   left: 0;
 }
@@ -189,7 +197,7 @@
   transform: translateX(50%);
   bottom: 40px;
   top: inherit;
-  z-index: 9;
+  z-index: 25;
 }
 .landing-info h3 {
   font-size: 22px;
@@ -297,6 +305,8 @@ h2.landing-info-h2 {
     bottom: 0;
     z-index: 11;
     position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .character-model::after,
   .character-model::before {
@@ -312,7 +322,7 @@ h2.landing-info-h2 {
   .landing-info {
     bottom: auto;
     top: 51%;
-    z-index: inherit;
+    z-index: 25;
     text-align: left;
     transform: translate(0%, -50%);
     right: auto;
@@ -330,7 +340,7 @@ h2.landing-info-h2 {
   .landing-info {
     bottom: auto;
     top: 51%;
-    z-index: inherit;
+    z-index: 25;
     text-align: left;
     transform: translate(0%, -50%);
     right: auto;

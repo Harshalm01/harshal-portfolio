@@ -1,83 +1,164 @@
+/* ==========================================================
+   PREMIUM FROSTED GLASS NAVBAR
+   (Sticky Glassmorphism Pill, Active Section Indicators & 60FPS Transitions)
+   ========================================================== */
+
 .header {
-  display: flex;
-  max-width: var(--cMaxWidth);
-  width: var(--cWidth);
-  justify-content: space-between;
-  padding: 20px 0px;
-  margin-bottom: -100px;
-  box-sizing: border-box;
   position: fixed;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  top: 0;
-  z-index: 9999;
+  width: 100%;
+  max-width: var(--cMaxWidth, 1920px);
+  padding: 20px 36px;
+  box-sizing: border-box;
+  z-index: 99999;
+  pointer-events: none;
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.header ul {
-  font-size: 12px;
+
+.header.is-scrolled {
+  padding: 12px 36px;
+}
+
+.header-inner {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 22px;
+  box-sizing: border-box;
+  border-radius: 40px;
+  pointer-events: auto;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header.is-scrolled .header-inner {
+  background: rgba(11, 8, 14, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(168, 85, 247, 0.08);
+}
+
+.navbar-title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.navbar-title:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px rgba(194, 164, 255, 0.5));
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 28px;
   margin: 0;
   padding: 0;
   list-style: none;
-  column-gap: 40px;
-  row-gap: 8px;
-  align-items: end;
 }
-.header ul li {
-  margin-left: 0px;
-  letter-spacing: 1px;
-  color: #ccc;
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  position: relative;
+  font-family: monospace;
+  font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
+  letter-spacing: 1.2px;
+  color: rgba(234, 229, 236, 0.75);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: color 0.2s ease, background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.navbar-connect {
-  position: absolute;
-  display: none;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 15px;
-  letter-spacing: 1px;
-  font-weight: 500;
+
+.nav-link:hover {
+  color: #ffffff;
+  background: rgba(194, 164, 255, 0.08);
 }
-.navbar-title {
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.2px;
+
+.nav-item.is-active .nav-link {
+  color: #ffffff;
+  background: rgba(168, 85, 247, 0.16);
+  border: 1px solid rgba(194, 164, 255, 0.28);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
 }
-@media only screen and (min-width: 500px) {
+
+.active-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accentColor, #c2a4ff);
+  box-shadow: 0 0 6px var(--accentColor, #c2a4ff);
+  animation: pulseNavDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseNavDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
   .header {
-    padding: 20px 0px;
+    padding: 12px 20px;
   }
-  .header ul {
-    flex-direction: row;
-    align-items: center;
-    font-size: 14px;
+
+  .header.is-scrolled {
+    padding: 8px 16px;
   }
-  .header ul li {
-    color: #eae5ec;
+
+  .header-inner {
+    padding: 8px 14px;
   }
-  .navbar-title {
-    font-size: 16px;
+
+  .navbar-menu {
+    gap: 8px;
+  }
+
+  .nav-link {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    padding: 5px 8px;
   }
 }
-@media only screen and (min-width: 900px) {
-  .navbar-connect {
-    display: block;
-  }
-}
-@media only screen and (min-width: 1200px) {
+
+@media (max-width: 600px) {
   .header {
-    padding: 35px 0px;
+    padding: 8px 12px;
   }
-  .header ul {
-    column-gap: 80px;
-    font-size: 16px;
+
+  .header-inner {
+    padding: 6px 10px;
   }
-  .navbar-connect {
-    font-size: 16px;
+
+  .navbar-menu {
+    gap: 4px;
   }
-  .navbar-title {
-    font-size: 18px;
+
+  .nav-link {
+    font-size: 9.5px;
+    letter-spacing: 0.5px;
+    padding: 4px 6px;
   }
 }

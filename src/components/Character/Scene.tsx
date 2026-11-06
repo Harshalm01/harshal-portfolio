@@ -15,37 +15,43 @@ import Loading from "../Loading";
 const Scene = () => {
   const canvasDiv = useRef<HTMLDivElement | null>(null);
   const hoverDivRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef(new THREE.Scene());
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [character, setChar] = useState<THREE.Object3D | null>(null);
+  const [, setChar] = useState<THREE.Object3D | null>(null);
   useEffect(() => {
     if (canvasDiv.current) {
+      // Clear any previous canvas element to prevent double characters
+      while (canvasDiv.current.firstChild) {
+        canvasDiv.current.removeChild(canvasDiv.current.firstChild);
+      }
+
+      let isMounted = true;
       const rect = canvasDiv.current.getBoundingClientRect();
       const container = { width: rect.width, height: rect.height };
       const aspect = container.width / container.height;
-      const scene = sceneRef.current;
+      const scene = new THREE.Scene();
 
       const renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
+        powerPreference: "high-performance",
       });
       renderer.setSize(container.width, container.height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       canvasDiv.current.appendChild(renderer.domElement);
 
       const camera = new THREE.PerspectiveCamera(14.5, aspect, 0.1, 1000);
-      camera.position.z = 10;
-      camera.position.set(0, 13.1, 24.7);
-      camera.zoom = 1.1;
+      camera.position.set(0, 13.0, 24.8);
+      camera.zoom = 1.05;
       camera.updateProjectionMatrix();
 
       let headBone: THREE.Object3D | null = null;
       let screenLight: THREE.Object3D | null = null;
       let mixer: THREE.AnimationMixer;
+      let onResize: (() => void) | null = null;
 
       const clock = new THREE.Clock();
 
@@ -55,9 +61,8 @@ const Scene = () => {
       const onProgress = (progress: number) => {
         setLoadingProgress(Math.round(progress));
         if (progress >= 100) {
-          // Wait a bit after reaching 100% before hiding loading screen
           setTimeout(() => {
-            setIsLoading(false);
+            if (isMounted) setIsLoading(false);
           }, 3500);
         }
       };
@@ -70,26 +75,33 @@ const Scene = () => {
       );
 
       loadCharacter().then((gltf) => {
-        if (gltf) {
-          const animations = setAnimations(gltf);
-          hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
-          mixer = animations.mixer;
-          const character = gltf.scene;
-          setChar(character);
-          scene.add(character);
-          headBone = character.getObjectByName("spine006") || null;
-          screenLight = character.getObjectByName("screenlight") || null;
+        if (!isMounted || !gltf) return;
+        scene.clear();
+        const animations = setAnimations(gltf);
+        hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
+        mixer = animations.mixer;
+        const character = gltf.scene;
 
-          // Model fully loaded, wait a bit before turning on lights and starting intro
-          setTimeout(() => {
-            light.turnOnLights();
-            animations.startIntro();
-          }, 1500);
+        character.traverse((child: THREE.Object3D) => {
+          if ((child as any).isSkinnedMesh) {
+            child.frustumCulled = false;
+          }
+        });
 
-          window.addEventListener("resize", () =>
-            handleResize(renderer, camera, canvasDiv, character)
-          );
-        }
+        setChar(character);
+        scene.add(character);
+        headBone = character.getObjectByName("spine006") || null;
+        screenLight = character.getObjectByName("screenlight") || null;
+
+        setTimeout(() => {
+          if (!isMounted) return;
+          light.turnOnLights();
+          animations.startIntro();
+        }, 1500);
+
+        onResize = () =>
+          handleResize(renderer, camera, canvasDiv, character);
+        window.addEventListener("resize", onResize);
       });
 
       let mouse = { x: 0, y: 0 },
@@ -123,8 +135,23 @@ const Scene = () => {
         landingDiv.addEventListener("touchstart", onTouchStart);
         landingDiv.addEventListener("touchend", onTouchEnd);
       }
+      let isVisible = true;
+      const visibilityObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isVisible = entry.isIntersecting;
+          });
+        },
+        { rootMargin: "250px 0px 250px 0px", threshold: 0 }
+      );
+      if (canvasDiv.current) {
+        visibilityObserver.observe(canvasDiv.current);
+      }
+
+      let reqId: number;
       const animate = () => {
-        requestAnimationFrame(animate);
+        reqId = requestAnimationFrame(animate);
+        if (!isVisible) return;
         if (headBone) {
           handleHeadRotation(
             headBone,
@@ -144,12 +171,14 @@ const Scene = () => {
       };
       animate();
       return () => {
+        cancelAnimationFrame(reqId);
+        visibilityObserver.disconnect();
         clearTimeout(debounce);
         scene.clear();
         renderer.dispose();
-        window.removeEventListener("resize", () =>
-          handleResize(renderer, camera, canvasDiv, character!)
-        );
+        if (onResize) {
+          window.removeEventListener("resize", onResize);
+        }
         if (canvasDiv.current) {
           canvasDiv.current.removeChild(renderer.domElement);
         }

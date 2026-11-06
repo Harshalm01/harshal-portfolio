@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ScrollIndicator from "./ScrollIndicator";
 
 import "./styles/WhatIDo.css";
 
@@ -27,7 +28,7 @@ const WhatIDo = () => {
     };
   }, []);
   return (
-    <div className="whatIDO">
+    <div className="whatIDO" id="what-i-do">
       <div className="what-box">
         <h2 className="title">
           W<span className="hat-h2">HAT</span>
@@ -92,15 +93,17 @@ const WhatIDo = () => {
               <h3>DEVELOP</h3>
               <h4>Description</h4>
               <p>
-                Building scalable web applications with modern technologies.
-                Expertise in full-stack development with focus on performance,
-                user experience, and clean code architecture.
+                Building robust full-stack web and cross-platform mobile
+                applications. Focused on performance, responsive design, clean
+                architecture, and seamless database integration.
               </p>
               <h5>Skillset & tools</h5>
               <div className="what-content-flex">
-                <div className="what-tags">Three.js</div>
                 <div className="what-tags">React</div>
-                <div className="what-tags">NextJs</div>
+                <div className="what-tags">TypeScript</div>
+                <div className="what-tags">Flutter</div>
+                <div className="what-tags">Node.js</div>
+                <div className="what-tags">Supabase</div>
                 <div className="what-tags">Tailwind CSS</div>
               </div>
               <div className="what-arrow"></div>
@@ -125,26 +128,25 @@ const WhatIDo = () => {
             </div>
             <div className="what-corner"></div>
             <div className="what-content-in">
-              <h3>INNOVATE</h3>
+              <h3>DESIGN</h3>
               <h4>Description</h4>
               <p>
-                Creating innovative solutions with machine learning and modern
-                web technologies. Developing open-source tools and libraries
-                that solve real-world problems and improve developer
-                productivity.
+                Crafting user-centered UI/UX designs, wireframes, and interactive
+                prototypes. Creating engaging digital experiences with intuitive
+                user flows, accessibility, and modern design systems.
               </p>
               <h5>Skillset & tools</h5>
               <div className="what-content-flex">
-                <div className="what-tags">Open Source</div>
-                <div className="what-tags">CLI Tools</div>
-                <div className="what-tags">API Design</div>
-                <div className="what-tags">Git/GitHub</div>
+                <div className="what-tags">UI/UX Design</div>
+                <div className="what-tags">Prototyping</div>
+                <div className="what-tags">Design Systems</div>
               </div>
               <div className="what-arrow"></div>
             </div>
           </div>
         </div>
       </div>
+      <ScrollIndicator targetId="career" label="SCROLL TO CAREER" />
     </div>
   );
 };

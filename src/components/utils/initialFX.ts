@@ -1,11 +1,26 @@
 import { SplitText } from "gsap/SplitText";
 import gsap from "gsap";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { smoother } from "../Navbar";
 
+let hasInitialized = false;
+
 export function initialFX() {
+  if (hasInitialized) return;
+  hasInitialized = true;
+
   document.body.style.overflowY = "auto";
-  smoother.paused(false);
-  document.getElementsByTagName("main")[0].classList.add("main-active");
+  const s = smoother || (typeof ScrollSmoother !== "undefined" ? ScrollSmoother.get() : null);
+  if (s) {
+    s.paused(false);
+  }
+  gsap.set(".character-model", { xPercent: -50, x: 0 });
+  gsap.set(".landing-container", { opacity: 1, y: "0%" });
+
+  const mainElem = document.getElementsByTagName("main")[0];
+  if (mainElem) {
+    mainElem.classList.add("main-active");
+  }
   gsap.to("body", {
     backgroundColor: "#0b080c",
     duration: 0.5,

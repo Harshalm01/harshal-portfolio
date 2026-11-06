@@ -1,0 +1,113 @@
+/* ==========================================================
+   SCROLL TO EXPLORE INDICATOR
+   Subtle, minimal, monospace pill with animated chevron
+   ========================================================== */
+
+.scroll-indicator-wrap {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll-indicator-wrap.is-inline {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin: 18px 0;
+  width: 100%;
+}
+
+.scroll-indicator-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 14, 24, 0.55);
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: rgba(234, 229, 236, 0.65);
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.scroll-indicator-btn:hover {
+  background: rgba(26, 19, 36, 0.85);
+  border-color: rgba(194, 164, 255, 0.45);
+  color: var(--accentColor, #c2a4ff);
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.18);
+  transform: translateY(-2px);
+}
+
+.scroll-indicator-btn:active {
+  transform: translateY(0);
+}
+
+.scroll-indicator-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+  user-select: none;
+}
+
+.scroll-indicator-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accentColor, #c2a4ff);
+  animation: scrollChevronBounce 2s ease-in-out infinite;
+}
+
+.scroll-indicator-icon.is-up {
+  animation: scrollChevronBounceUp 2s ease-in-out infinite;
+}
+
+@keyframes scrollChevronBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3.5px);
+  }
+}
+
+@keyframes scrollChevronBounceUp {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3.5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-indicator-wrap {
+    bottom: 18px;
+  }
+  .scroll-indicator-btn {
+    padding: 5px 11px;
+    gap: 6px;
+  }
+  .scroll-indicator-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-indicator-icon {
+    animation: none;
+  }
+}
+

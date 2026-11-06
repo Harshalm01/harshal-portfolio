@@ -1,0 +1,463 @@
+/* ==========================================================
+   CERTIFICATIONS SECTION — TRUE 3D CIRCULAR CYLINDER GALLERY
+   (Exact Match to Aerqon Aviation Flight Gallery WebGL Engine)
+   ========================================================== */
+
+.certifications-section {
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+  padding: 120px 0 100px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--backgroundColor);
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0px;
+}
+
+.certifications-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 36px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+}
+
+/* ==========================================================
+   01. SECTION HEADER
+   ========================================================== */
+.certifications-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.certifications-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(194, 164, 255, 0.28);
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--accentColor, #c2a4ff);
+  text-transform: uppercase;
+}
+
+.badge-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accentColor, #c2a4ff);
+  box-shadow: 0 0 8px var(--accentColor, #c2a4ff);
+  animation: pulseCertDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseCertDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.3); }
+}
+
+.certifications-title {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.8px;
+  margin: 0;
+}
+
+.certifications-title > span {
+  color: var(--accentColor, #c2a4ff);
+  background: linear-gradient(135deg, #c2a4ff 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.certifications-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(234, 229, 236, 0.72);
+  max-width: 780px;
+  margin: 0;
+  font-weight: 350;
+}
+
+/* ==========================================================
+   02. 3D CIRCULAR WEBGL VIEWPORT (AERQON SPECIFICATION)
+   ========================================================== */
+.circular-certs-viewport {
+  position: relative;
+  width: 100%;
+  height: 760px;
+  margin: 10px auto 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  touch-action: pan-y;
+}
+
+/* Ambient Radial Purple Glow Behind Cylinder */
+.circular-certs-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 85%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(168, 85, 247, 0.16) 0%,
+    rgba(194, 164, 255, 0.05) 50%,
+    transparent 75%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Three.js WebGL Canvas Container */
+.circular-certs-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  outline: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.circular-certs-canvas:active {
+  cursor: grabbing;
+}
+
+.circular-certs-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Side Navigation Rotation Chevrons */
+.circular-cert-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(18, 13, 26, 0.82);
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.circular-cert-arrow:hover {
+  background: rgba(168, 85, 247, 0.45);
+  border-color: rgba(194, 164, 255, 0.85);
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 12px 32px rgba(168, 85, 247, 0.35);
+}
+
+.circular-cert-arrow:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.circular-cert-arrow.prev {
+  left: 6px;
+}
+
+.circular-cert-arrow.next {
+  right: 6px;
+}
+
+/* Drag & Touch Hint Pill */
+.circular-certs-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(14, 10, 20, 0.75);
+  border: 1px solid rgba(194, 164, 255, 0.25);
+  backdrop-filter: blur(8px);
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(234, 229, 236, 0.7);
+  pointer-events: none;
+  user-select: none;
+}
+
+.circular-certs-hint .hint-icon {
+  font-size: 15px;
+  color: var(--accentColor, #c2a4ff);
+  animation: hintWiggle 2.5s infinite ease-in-out;
+}
+
+@keyframes hintWiggle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ==========================================================
+   03. FULLSCREEN CERTIFICATE LIGHTBOX MODAL
+   ========================================================== */
+.cert-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  background: rgba(6, 4, 10, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  animation: certFadeIn 0.2s ease-out;
+}
+
+@keyframes certFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cert-lightbox-modal {
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  background: #110b1a;
+  border: 1px solid rgba(194, 164, 255, 0.32);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.92), 0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+.cert-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(194, 164, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cert-lightbox-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cert-lightbox-counter {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #c2a4ff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(194, 164, 255, 0.1);
+  border: 1px solid rgba(194, 164, 255, 0.25);
+}
+
+.cert-lightbox-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.cert-lightbox-sub {
+  font-size: 12.5px;
+  color: rgba(234, 229, 236, 0.7);
+  margin: 2px 0 0 0;
+}
+
+.cert-lightbox-close {
+  background: transparent;
+  border: none;
+  color: rgba(234, 229, 236, 0.85);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.cert-lightbox-close:hover {
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.cert-lightbox-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: auto;
+  min-height: 400px;
+  background: #09060e;
+}
+
+.cert-lightbox-img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.cert-lightbox-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  border-top: 1px solid rgba(194, 164, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cert-lightbox-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(234, 229, 236, 0.78);
+  margin: 0;
+  max-width: 620px;
+}
+
+.cert-lightbox-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cert-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.25);
+  color: #ffffff;
+  font-family: monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cert-nav-btn:hover {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #c2a4ff;
+}
+
+/* ==========================================================
+   04. RESPONSIVE MEDIA QUERIES
+   ========================================================== */
+@media (max-width: 1100px) {
+  .circular-certs-viewport {
+    height: 660px;
+  }
+
+  .certifications-title {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .certifications-section {
+    padding: 90px 0 80px 0;
+  }
+
+  .certifications-container {
+    padding: 0 20px;
+    gap: 20px;
+  }
+
+  .certifications-title {
+    font-size: 34px;
+  }
+
+  .circular-certs-viewport {
+    height: 520px;
+  }
+
+  .circular-cert-arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+  }
+
+  .cert-lightbox-header {
+    padding: 12px 16px;
+  }
+
+  .cert-lightbox-body {
+    padding: 12px;
+  }
+
+  .cert-lightbox-footer {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .certifications-title {
+    font-size: 28px;
+  }
+
+  .circular-certs-viewport {
+    height: 450px;
+  }
+
+  .circular-cert-arrow {
+    display: none;
+  }
+
+  .circular-certs-hint {
+    font-size: 9.5px;
+    padding: 4px 10px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .badge-pulse-dot,
+  .hint-icon {
+    animation: none !important;
+  }
+}

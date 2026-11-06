@@ -1,80 +1,137 @@
-import { useEffect } from "react";
-
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useEffect, useState } from "react";
 import HoverLinks from "./HoverLinks";
-import { gsap } from "gsap";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
-
 import Logo from "../../public/images/logo.png";
-
 import "./styles/Navbar.css";
 
-gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
-export let smoother: ScrollSmoother;
+// Kept for backward compatibility with existing component imports
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export let smoother: any = null;
 
-const Navbar = () => {
+const navItems = [
+  { label: "ABOUT", href: "#about", id: "about" },
+  { label: "CAREER", href: "#career", id: "career" },
+  { label: "WORK", href: "#work", id: "work" },
+  { label: "CERTIFICATIONS", href: "#certifications", id: "certifications" },
+  { label: "CONTACT", href: "#contact", id: "contact" },
+];
+
+const Navbar: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<string>("landingDiv");
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
   useEffect(() => {
-    smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
-      effects: true,
-      autoResize: true,
-      ignoreMobileResize: true,
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    // IntersectionObserver to spy on active section
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-20% 0px -50% 0px",
+        threshold: 0,
+      }
+    );
+
+    const sectionElements = [
+      document.getElementById("landingDiv"),
+      document.getElementById("about"),
+      document.getElementById("what-i-do"),
+      document.getElementById("career"),
+      document.getElementById("work"),
+      document.getElementById("certifications"),
+      document.getElementById("techstack"),
+      document.getElementById("contact"),
+    ];
+
+    sectionElements.forEach((el) => {
+      if (el) observer.observe(el);
     });
 
-    smoother.scrollTop(0);
-    smoother.paused(true);
-
-    const links = document.querySelectorAll(".header ul a");
-    links.forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", (e) => {
-        if (window.innerWidth > 1024) {
-          e.preventDefault();
-          const elem = e.currentTarget as HTMLAnchorElement;
-          const section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
-        }
-      });
-    });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
   }, []);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      const targetTop =
+        (target as HTMLElement).getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: targetTop,
+        behavior: "smooth",
+      });
+      if (window.history.pushState) {
+        window.history.pushState(null, "", href);
+      }
+    }
+  };
+
   return (
     <>
-      <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
-          <img
-            src={Logo}
-            alt="Logo"
-            width={50}
-            style={{
-              filter: "invert(100%)",
+      <header className={`header ${isScrolled ? "is-scrolled" : ""}`}>
+        <div className="header-inner">
+          <a
+            href="/#"
+            className="navbar-title"
+            data-cursor="disable"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              if (window.history.pushState) {
+                window.history.pushState(null, "", "/#");
+              }
             }}
-          />
-        </a>
+            aria-label="Home"
+          >
+            <img
+              src={Logo}
+              alt="Harshal Mehta Logo"
+              width={42}
+              height={42}
+              style={{ filter: "invert(100%)" }}
+            />
+          </a>
 
-        <ul>
-          <li>
-            <a data-href="#about" href="#about">
-              <HoverLinks text="ABOUT" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#work" href="#work">
-              <HoverLinks text="WORK" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#contact" href="#contact">
-              <HoverLinks text="CONTACT" />
-            </a>
-          </li>
-        </ul>
-      </div>
+          <nav className="navbar-nav">
+            <ul className="navbar-menu">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <li
+                    key={item.id}
+                    className={`nav-item ${isActive ? "is-active" : ""}`}
+                  >
+                    <a
+                      data-href={item.href}
+                      href={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      className="nav-link"
+                    >
+                      <HoverLinks text={item.label} />
+                      {isActive && <span className="active-dot" />}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+      </header>
 
       <div className="landing-circle1"></div>
       <div className="landing-circle2"></div>

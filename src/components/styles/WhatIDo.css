@@ -5,11 +5,17 @@
   place-items: center;
   position: relative;
   opacity: 1;
-  height: 100vh;
+  min-height: 100svh;
+  height: 100svh;
+  overflow: hidden;
+  box-sizing: border-box;
   width: var(--cWidth);
   max-width: 1920px;
   margin: auto;
   z-index: 9;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0px;
 }
 .what-box {
   width: 50%;
@@ -37,7 +43,8 @@
   height: 500px;
   margin-left: 200px;
   position: relative;
-  display: none;
+  display: flex;
+  opacity: 1;
 }
 .what-content {
   width: 450px;

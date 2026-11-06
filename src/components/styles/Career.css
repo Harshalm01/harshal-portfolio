@@ -1,216 +1,2531 @@
+/* ==========================================================
+   CAREER UNIVERSE — PREMIUM GAMIFIED PORTFOLIO EXPERIENCE
+   (60FPS GPU-Accelerated Futuristic Constellation & Mission Control)
+   ========================================================== */
+
 .career-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  place-items: center;
-  justify-content: center;
   position: relative;
   opacity: 1;
   height: auto;
-  margin: auto;
-  margin-bottom: 250px;
-  padding: 120px 0px;
+  margin: 0 auto;
+  padding: 110px 0px 90px 0px;
+  box-sizing: border-box;
+  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0px;
 }
 
-.career-section h2 {
-  font-size: 70px;
-  line-height: 70px;
-  font-weight: 400;
+.career-container {
+  width: var(--cWidth);
+  max-width: 1240px;
+  margin: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 75px;
+}
+
+/* ==========================================================
+   00. BACKGROUND CONSTELLATION GRAPHIC (SVG + CSS ONLY)
+   ========================================================== */
+.career-constellation-bg {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 720px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.65;
+}
+
+.constellation-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.constellation-path {
+  animation: constellationDash 25s linear infinite;
+}
+
+.constellation-path.p2 {
+  animation-duration: 32s;
+  animation-direction: reverse;
+}
+
+.constellation-path.p3 {
+  animation-duration: 20s;
+}
+
+@keyframes constellationDash {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+.constellation-star-dot {
+  opacity: 0.7;
+}
+
+.constellation-star-glow {
+  animation: starGlowPulse 4s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes starGlowPulse {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 0.85;
+    transform: scale(1.25);
+  }
+}
+
+/* ==========================================================
+   01. CAREER UNIVERSE INTRODUCTION & DYNAMIC STATS HUD
+   ========================================================== */
+.universe-hero-deck {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  background: linear-gradient(0deg, #7f40ff, #ffffff);
+  gap: 16px;
+}
+
+.universe-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.25);
+  color: var(--accentColor);
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+.universe-beacon-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 8px #a855f7;
+}
+
+.universe-headline {
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.05;
+  font-weight: 500;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 35%, #c4a1ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  margin-top: 50px;
-  margin-bottom: 90px;
+  margin: 0;
+  letter-spacing: -0.6px;
 }
-.career-section h2 > span {
+
+.universe-headline > span {
   font-family: "Geist", sans-serif;
   font-weight: 300;
+  color: var(--accentColor);
 }
-.career-info {
+
+.universe-subtext {
+  max-width: 620px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(234, 229, 236, 0.75);
+  margin: 0 auto;
+}
+
+/* --- Dynamic Stats HUD (Calculated From Data Arrays) --- */
+.universe-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 960px;
+  margin-top: 18px;
+}
+
+.universe-stat-card {
+  background: #0f0b17;
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.universe-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(194, 164, 255, 0.42);
+  background: #140e1f;
+}
+
+.universe-stat-num {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.universe-stat-num .stat-unit {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--accentColor);
+  opacity: 0.85;
+}
+
+.universe-stat-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: rgba(234, 229, 236, 0.65);
+  font-weight: 400;
+}
+
+.universe-stat-meta .stat-icon {
+  font-size: 15px;
+  color: var(--accentColor);
+}
+
+/* ==========================================================
+   BLOCK HEADERS (SHARED PROTOCOL STYLE)
+   ========================================================== */
+.universe-block {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  position: relative;
+  z-index: 1;
+}
+
+.universe-block-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.universe-label-num {
+  font-family: monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accentColor);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(194, 164, 255, 0.1);
+  border: 1px solid rgba(194, 164, 255, 0.22);
+}
+
+.universe-block-label h4 {
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #ffffff;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.universe-label-line {
+  flex-grow: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(194, 164, 255, 0.25) 0%,
+    rgba(194, 164, 255, 0.05) 60%,
+    transparent 100%
+  );
+}
+
+/* ==========================================================
+   02. EDUCATION CONSTELLATION (PROGRESSION NODES)
+   ========================================================== */
+.universe-constellation-track {
+  position: relative;
+  width: 100%;
+}
+
+.universe-path-line-wrap {
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  right: 4%;
+  height: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.universe-path-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(52, 211, 153, 0.4) 0%,
+    rgba(194, 164, 255, 0.45) 50%,
+    rgba(168, 85, 247, 0.6) 100%
+  );
+}
+
+.universe-path-glow-sweep {
+  position: absolute;
+  top: -1px;
+  left: -80px;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #c2a4ff 50%,
+    transparent 100%
+  );
+  animation: pathGlowSweep 3.5s ease-in-out infinite;
+}
+
+@keyframes pathGlowSweep {
+  0% {
+    left: -80px;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.universe-milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Distinctive Progression Milestone Node */
+.universe-milestone-node {
+  background: #100b19;
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  border-radius: 14px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, opacity;
+  position: relative;
+  overflow: hidden;
+}
+
+.universe-milestone-node::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: rgba(194, 164, 255, 0.35);
+}
+
+.universe-milestone-node.completed::before {
+  background: #34d399;
+}
+
+.universe-milestone-node.active-pursuit::before {
+  background: #a855f7;
+}
+
+.universe-milestone-node:hover {
+  border-color: rgba(194, 164, 255, 0.5);
+  background: #171123;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.universe-milestone-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.universe-milestone-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.universe-milestone-tag .node-level {
+  color: var(--accentColor);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.universe-milestone-tag .node-sep {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.universe-milestone-tag .node-tier {
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.2px;
+}
+
+.universe-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.universe-status-badge.status-done {
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34d399;
+}
+
+.universe-status-badge.status-done .badge-icon {
+  font-size: 13px;
+}
+
+.universe-status-badge.status-active {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  color: #d8b4fe;
+}
+
+.status-pulse-ring {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 8px #a855f7;
+  animation: beaconPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes beaconPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+}
+
+.universe-milestone-title {
+  font-size: 19.5px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.universe-milestone-inst {
+  font-size: 14px;
+  color: rgba(234, 229, 236, 0.75);
+  margin: 0;
+  line-height: 1.45;
+  font-weight: 300;
+}
+
+.universe-milestone-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.universe-period-badge {
+  font-family: monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.universe-action-link {
+  font-size: 12.5px;
+  color: var(--accentColor);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   03. PROFESSIONAL MISSION ARCHIVE (GSAP-COMPATIBLE TRACK)
+   ========================================================== */
+.universe-section-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.universe-subhead {
+  font-size: 26px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.universe-intro-desc {
+  font-size: 14.5px;
+  color: rgba(234, 229, 236, 0.7);
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.rpg-missions-track {
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 0px auto;
-}
-.career-info-box {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 50px;
-}
-.career-info-box p {
-  width: 40%;
-  font-size: 18px;
-  font-weight: 300;
-  margin: 0;
-}
-.career-info-in {
-  display: flex;
-  width: 40%;
-  justify-content: space-between;
-  gap: 50px;
-}
-.career-info h3 {
-  font-size: 48px;
-  margin: 0;
-  font-weight: 500;
-  line-height: 45px;
+  margin-top: 10px;
 }
 
-.career-info h4 {
-  font-size: 33px;
-  line-height: 30px;
-  letter-spacing: 0.8px;
-  font-weight: 500;
-  margin: 0;
-}
-.career-info h5 {
-  font-weight: 400;
-  letter-spacing: 0.7px;
-  font-size: 20px;
-  text-transform: capitalize;
-  margin: 10px 0px;
-  color: var(--accentColor);
-}
+/* GSAP timeline line & dot */
 .career-timeline {
   position: absolute;
-  top: -50px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 3px;
+  width: 2px;
   height: 100%;
-  background-image: linear-gradient(
-    to top,
-    #aa42ff 20%,
+  transform-origin: top center;
+  will-change: transform;
+  background: linear-gradient(
+    180deg,
+    rgba(168, 85, 247, 0.1) 0%,
     var(--accentColor) 50%,
-    transparent 95%
+    rgba(168, 85, 247, 0.1) 100%
   );
-  max-height: 0%;
 }
+
 .career-dot {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 50%);
-  background-color: #aa42ff;
-  width: 10px;
-  height: 10px;
-  border-radius: 50px;
-  box-shadow: 0px 0px 5px 2px #d29bff, 0px 0px 15px 8px #d097ff,
-    0px 0px 110px 20px #f2c0ff;
-  animation: timeline 0.8s linear infinite forwards;
+  background-color: #c2a4ff;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c2a4ff;
 }
 
-@keyframes timeline {
-  10%,
-  20%,
-  50%,
-  70%,
-  90% {
-    box-shadow: 0px 0px 5px 2px #d29bff;
-  }
-  10%,
-  30%,
-  0%,
-  100%,
-  64%,
-  80% {
-    box-shadow: 0px 0px 5px 2px #d29bff, 0px 0px 15px 5px #d097ff,
-      0px 0px 110px 20px #f2c0ff;
-  }
+.rpg-missions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  position: relative;
+  z-index: 1;
 }
-@keyframes timeline2 {
+
+.universe-mission-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  will-change: transform, opacity;
+}
+
+.rpg-mission-side {
+  width: calc(50% - 36px);
+  padding: 20px 24px;
+  background: #100b18;
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  border-radius: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  will-change: transform, opacity;
+}
+
+.universe-mission-card:hover .rpg-mission-side {
+  border-color: rgba(194, 164, 255, 0.48);
+  background: #171022;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.rpg-mission-side.left {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.universe-mission-code-badge {
+  font-family: monospace;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--accentColor);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.2);
+}
+
+.rpg-node-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.rpg-node-org {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--accentColor);
+  margin: 0;
+}
+
+.rpg-node-connector {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.rpg-node-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #a855f7;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.universe-mission-card:hover .rpg-node-dot {
+  background: #c2a4ff;
+  transform: scale(1.25);
+  box-shadow: 0 0 10px #c2a4ff;
+}
+
+.rpg-mission-side.right {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.rpg-date-badge {
+  font-family: monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(234, 229, 236, 0.85);
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.rpg-node-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(234, 229, 236, 0.8);
+  margin: 0;
+  font-weight: 300;
+}
+
+.rpg-node-tags {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  width: 100%;
+}
+
+.rpg-skill-chip {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.rpg-inspect-link {
+  font-size: 11.5px;
+  color: var(--accentColor);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   04. TACTICAL SKILL MATRIX (PRESERVED & FULLY POPULATED)
+   ========================================================== */
+.rpg-block-skills {
+  margin-top: 10px;
+}
+
+.rpg-block-label-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+/* --- Left-to-Right Animated Divider with Light Sweep --- */
+.rpg-divider-track {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rpg-divider-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #a855f7 0%,
+    var(--accentColor) 50%,
+    rgba(194, 164, 255, 0.3) 85%,
+    transparent 100%
+  );
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rpg-divider-sweep {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #c2a4ff 40%,
+    #ffffff 75%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-120px);
+  will-change: transform, opacity;
+}
+
+.rpg-block-skills.entered .rpg-divider-line {
+  transform: scaleX(1);
+}
+
+.rpg-block-skills.entered .rpg-divider-sweep {
+  animation: dividerLightSweep 1.2s 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes dividerLightSweep {
   0% {
-    box-shadow: 0px 0px 5px 2px #d29bff;
+    transform: translateX(-120px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
   }
   100% {
-    box-shadow: 0px 0px 5px 2px #d29bff, 0px 0px 15px 5px #d097ff,
-      0px 0px 110px 20px #f2c0ff;
+    transform: translateX(1100px);
+    opacity: 0;
   }
 }
-@media only screen and (max-width: 1400px) {
-  .career-section h2 {
-    font-size: 50px;
-    line-height: 50px;
-  }
-  .career-info h4 {
-    font-size: 22px;
-    line-height: 24px;
-    width: 180px;
-  }
-  .career-info h5 {
-    font-size: 17px;
-  }
-  .career-info h3 {
-    font-size: 40px;
-  }
-  .career-info-box p {
-    font-size: 14px;
-  }
-  .career-info-in {
-    width: 45%;
-    gap: 20px;
-  }
 
-  .career-info-box p {
-    width: 45%;
+/* --- Skill Tree Panel --- */
+.rpg-skilltree-panel {
+  background: #0f0b17;
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+.rpg-branches-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 18px;
+}
+
+.rpg-branch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(194, 164, 255, 0.16);
+  background: rgba(194, 164, 255, 0.04);
+  color: rgba(234, 229, 236, 0.75);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.rpg-branch-btn:hover {
+  background: rgba(194, 164, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(194, 164, 255, 0.35);
+}
+
+.rpg-branch-btn.active {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: #a855f7;
+  color: #ffffff;
+}
+
+.rpg-branch-icon {
+  font-size: 16px;
+  color: var(--accentColor);
+}
+
+.rpg-tree-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rpg-tree-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rpg-tree-code {
+  font-family: monospace;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--accentColor);
+}
+
+.rpg-tree-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 3px 0 0 0;
+}
+
+.rpg-tree-focus {
+  font-size: 13.5px;
+  color: rgba(234, 229, 236, 0.65);
+  font-weight: 300;
+}
+
+/* Staggered Animated Cards Grid */
+.rpg-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  position: relative;
+}
+
+.rpg-nodes-grid.cards-exiting .rpg-tree-node {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+
+.rpg-nodes-grid.cards-entering .rpg-tree-node {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cardEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--node-index, 0) * 0.04s);
+}
+
+@keyframes cardEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-@media only screen and (max-width: 1025px) {
-  .career-section {
-    padding: 70px 0px;
-    padding-top: 220px;
-    margin-top: -200px;
-    margin-bottom: 0;
+
+/* Complete Skill Card (Zero Void Space) */
+.rpg-tree-node {
+  background: #130e1c;
+  border: 1px solid rgba(194, 164, 255, 0.16);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease, background 0.2s ease;
+  position: relative;
+  will-change: transform;
+}
+
+.rpg-tree-node:hover {
+  border-color: rgba(194, 164, 255, 0.5);
+  background: #191225;
+  transform: translateY(-3px);
+}
+
+.rpg-tree-node-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rpg-node-level-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rpg-node-check-icon {
+  color: #34d399;
+  font-size: 16px;
+}
+
+.rpg-node-badge {
+  font-family: monospace;
+  font-size: 10.5px;
+  color: var(--accentColor);
+  letter-spacing: 0.6px;
+}
+
+.rpg-node-status-pill {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.rpg-node-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.rpg-node-bar {
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-top: 2px;
+  position: relative;
+}
+
+.rpg-node-progress {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #8a4bff 0%, #c2a4ff 85%, #ffffff 100%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+  animation: progressGrow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(0.1s + var(--node-index, 0) * 0.05s);
+}
+
+@keyframes progressGrow {
+  to {
+    transform: scaleX(1);
   }
 }
+
+.rpg-node-applied {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.rpg-applied-prefix {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 1.2px;
+  color: rgba(194, 164, 255, 0.7);
+}
+
+.rpg-applied-project {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #e5def5;
+  line-height: 1.35;
+}
+
+.rpg-node-tags {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.rpg-node-tag-item {
+  font-family: monospace;
+  font-size: 10px;
+  color: rgba(234, 229, 236, 0.75);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.rpg-node-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rpg-node-status {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #34d399;
+}
+
+.rpg-node-status-code {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  color: rgba(194, 164, 255, 0.6);
+}
+
+/* --- Option 3: Interactive Panel Footer HUD Telemetry Bar --- */
+.rpg-matrix-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 18px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rpg-matrix-feed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #08050d;
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  border-radius: 8px;
+  padding: 9px 14px;
+  flex-wrap: wrap;
+}
+
+.rpg-feed-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.2px;
+  color: var(--accentColor);
+  white-space: nowrap;
+}
+
+.rpg-feed-beacon {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  opacity: 0.7;
+}
+
+.rpg-feed-beacon.pulse {
+  background: #a855f7;
+  opacity: 1;
+  box-shadow: 0 0 8px #a855f7;
+}
+
+.rpg-feed-channel {
+  font-weight: 600;
+}
+
+.rpg-feed-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.rpg-feed-text code {
+  font-family: monospace;
+  font-size: 11px;
+  color: #e5def5;
+  letter-spacing: 0.5px;
+}
+
+.rpg-matrix-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rpg-footer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.rpg-footer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+}
+
+.rpg-footer-label {
+  color: rgba(194, 164, 255, 0.7);
+}
+
+.rpg-footer-val {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.rpg-footer-val.green {
+  color: #34d399;
+}
+
+.rpg-footer-item.telemetry-code code {
+  color: var(--accentColor);
+  opacity: 0.8;
+  font-size: 10.5px;
+}
+
+/* ==========================================================
+   05 & 06. HOLOGRAPHIC BRIEFING MODALS (MISSION & MILESTONE)
+   ========================================================== */
+.rpg-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  inset: 0;
+  background: rgba(4, 2, 8, 0.88);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(4px);
+}
+
+.rpg-modal-window {
+  width: 100%;
+  max-width: 620px;
+  background: #0d0816;
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.rpg-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rpg-modal-title {
+  font-size: 19px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 5px 0 0 0;
+}
+
+.rpg-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.rpg-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.rpg-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.rpg-modal-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rpg-meta-t {
+  display: block;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--accentColor);
+  margin-bottom: 2px;
+}
+
+.rpg-meta-d {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.rpg-meta-d.status-ok {
+  color: #34d399;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rpg-meta-d.status-active-pursuit {
+  color: #c2a4ff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pulse-ring.mini {
+  width: 5px;
+  height: 5px;
+}
+
+.rpg-modal-section h5 {
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+}
+
+.rpg-modal-section p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(234, 229, 236, 0.85);
+  margin: 0;
+  font-weight: 300;
+}
+
+.rpg-directives-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rpg-directives-list li {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(234, 229, 236, 0.85);
+  font-weight: 300;
+}
+
+.rpg-tools-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rpg-tool-badge {
+  font-size: 11.5px;
+  font-family: monospace;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.22);
+  color: #e5def5;
+}
+
+.rpg-terminal-box {
+  background: #060408;
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #a855f7;
+}
+
+/* Attached Credentials Grid inside Briefing Modals */
+.modal-certs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.modal-cert-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: rgba(194, 164, 255, 0.05);
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.modal-cert-icon {
+  font-size: 20px;
+  color: var(--accentColor);
+  display: flex;
+  align-items: center;
+}
+
+.modal-cert-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+}
+
+.modal-cert-info h6 {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-cert-info span {
+  font-size: 11.5px;
+  color: rgba(234, 229, 236, 0.65);
+}
+
+.modal-cert-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.modal-cert-view-btn:hover {
+  background: rgba(168, 85, 247, 0.4);
+  border-color: #c2a4ff;
+}
+
+/* ==========================================================
+   07. CERTIFICATE VAULT & CINEMATIC CREDENTIAL VIEWER
+   ========================================================== */
+.cert-vault-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  inset: 0;
+  background: rgba(3, 1, 6, 0.94);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-vault-overlay.is-fullscreen {
+  padding: 0;
+}
+
+.cert-vault-modal {
+  width: 96vw;
+  max-width: 1500px;
+  height: 94vh;
+  max-height: 96vh;
+  background: #090610;
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 35px 90px -10px rgba(0, 0, 0, 0.98), 0 0 40px rgba(168, 85, 247, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-vault-modal.is-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.cert-vault-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  background: #080511;
+  border-bottom: 1px solid rgba(194, 164, 255, 0.18);
+  flex-shrink: 0;
+  z-index: 5;
+}
+
+.cert-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cert-hud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--accentColor);
+}
+
+.cert-hud-badge .badge-icon {
+  font-size: 13px;
+}
+
+.cert-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.cert-issuer {
+  font-size: 11.5px;
+  color: rgba(234, 229, 236, 0.7);
+}
+
+.cert-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cert-btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+.cert-btn-icon:hover {
+  background: rgba(194, 164, 255, 0.22);
+  border-color: rgba(194, 164, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.cert-btn-icon.active {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #c2a4ff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
+.cert-btn-icon.close:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* Vault Body Area */
+.cert-vault-body {
+  padding: 0;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #030106;
+  overflow: hidden;
+  position: relative;
+}
+
+.cert-document-wrapper {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: #000;
+  min-height: 0;
+}
+
+.cert-pdf-frame {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  border: none;
+  display: block;
+}
+
+.cert-image-wrapper {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 24px;
+  box-sizing: border-box;
+  background: radial-gradient(circle at center, #0e081c 0%, #030106 100%);
+  cursor: zoom-in;
+}
+
+.cert-image-render {
+  max-width: 95%;
+  max-height: 95%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-image-wrapper.zoomed {
+  cursor: zoom-out;
+  align-items: flex-start;
+}
+
+.cert-image-wrapper.zoomed .cert-image-render {
+  max-width: none;
+  max-height: none;
+  width: 130%;
+  transform: none;
+}
+
+/* Holographic Pending Document State */
+.cert-pending-vault-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  max-width: 580px;
+  padding: 30px;
+  margin: auto;
+}
+
+.cert-pending-glow-shield {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accentColor);
+  font-size: 32px;
+}
+
+.shield-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 20px;
+  border: 1px dashed rgba(194, 164, 255, 0.25);
+  animation: starGlowPulse 3s infinite alternate;
+}
+
+.cert-pending-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.pending-protocol {
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accentColor);
+}
+
+.cert-pending-text h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.cert-pending-text p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(234, 229, 236, 0.72);
+  margin: 0;
+  font-weight: 300;
+}
+
+.cert-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+  text-align: left;
+}
+
+.cert-spec-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spec-label {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  color: var(--accentColor);
+}
+
+.spec-val {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.spec-val.ok {
+  color: #34d399;
+}
+
+.spec-val.code {
+  font-family: monospace;
+  color: #d8b4fe;
+}
+
+.spec-val.pending {
+  color: rgba(234, 229, 236, 0.75);
+  font-family: monospace;
+  font-size: 10.5px;
+}
+
+/* Vault Footer */
+.cert-vault-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: #080511;
+  border-top: 1px solid rgba(194, 164, 255, 0.18);
+  gap: 16px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  z-index: 5;
+}
+
+.cert-footer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.cert-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.cert-footer-status code {
+  color: rgba(194, 164, 255, 0.9);
+}
+
+.cert-footer-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cert-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+.cert-action-btn.verify {
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  color: #ffffff;
+}
+
+.cert-action-btn.verify:hover {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #c2a4ff;
+}
+
+.cert-action-btn.download {
+  background: rgba(52, 211, 153, 0.16);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #34d399;
+}
+
+.cert-action-btn.download:hover {
+  background: rgba(52, 211, 153, 0.3);
+  border-color: #34d399;
+}
+
+.cert-action-btn.close {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.cert-action-btn.close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================
+   ACCESSIBILITY & PREFERS-REDUCED-MOTION
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .constellation-path,
+  .constellation-star-glow,
+  .universe-path-glow-sweep,
+  .rpg-divider-line,
+  .rpg-divider-sweep,
+  .rpg-node-progress,
+  .rpg-tree-node,
+  .status-pulse-ring,
+  .shield-ring,
+  .cert-vault-modal,
+  .rpg-modal-window {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN (DESKTOP / TABLET / MOBILE)
+   ========================================================== */
 @media only screen and (max-width: 900px) {
-  .career-info-box {
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 70px;
+  .universe-stats-row {
+    grid-template-columns: 1fr;
   }
-  .career-info-in,
-  .career-info-box p {
-    width: 100%;
-    padding-left: 10%;
-    box-sizing: border-box;
+  .universe-milestones-grid {
+    grid-template-columns: 1fr;
+  }
+  .universe-path-line-wrap {
+    display: none;
   }
   .career-timeline {
-    left: 0%;
+    left: 15px;
   }
-  .career-container {
-    width: calc(100% - 25px);
+  .universe-mission-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 36px;
+    gap: 10px;
+  }
+  .rpg-mission-side {
+    width: 100% !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+  .rpg-node-connector {
+    left: 15px;
+    top: 25px;
+    transform: translate(-50%, 0);
+  }
+  .rpg-matrix-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .rpg-matrix-feed,
+  .rpg-matrix-stats {
+    width: 100%;
+  }
+  .cert-spec-grid {
+    grid-template-columns: 1fr;
   }
 }
-@media only screen and (max-width: 600px) {
-  .career-info {
-    margin: 0;
-  }
-  .career-section h2 {
-    width: 100%;
-    font-size: 45px;
-    line-height: 45px;
-    margin-top: 0px;
-  }
-  .career-info-in {
-    gap: 0px;
-  }
-  .career-info h3 {
-    font-size: 33px;
-  }
-  .career-info-in,
-  .career-info-box p {
-    padding-left: 5%;
-  }
-  .career-section {
-    padding-top: 90px;
-    margin-top: -70px;
 
-    align-items: start;
-    place-items: inherit;
-    justify-content: left;
+@media only screen and (max-width: 600px) {
+  .career-section {
+    padding-top: 60px;
+    padding-bottom: 40px;
   }
+  .universe-headline {
+    font-size: 32px;
+  }
+  .universe-milestone-node {
+    padding: 18px;
+  }
+  .rpg-mission-side {
+    padding: 16px 18px;
+  }
+  .rpg-skilltree-panel {
+    padding: 18px;
+  }
+  .rpg-branches-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
+  }
+  .cert-vault-overlay {
+    padding: 0;
+  }
+  .cert-vault-modal {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+  .cert-vault-header {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+  .cert-title {
+    font-size: 15px;
+  }
+  .cert-hud-badge {
+    font-size: 9px;
+  }
+  .cert-btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
+  .cert-vault-body {
+    padding: 0;
+  }
+  .cert-vault-footer {
+    padding: 8px 12px;
+  }
+  .cert-footer-status {
+    display: none;
+  }
+  .cert-footer-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ==========================================================
+   07. MULTI-TRACK & ADVANCED PROJECT SHOWCASE STYLING
+   ========================================================== */
+
+/* Mission Card Code Badges, Tracks & Work Mode */
+.universe-mission-code-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.universe-track-tag {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.8px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(194, 164, 255, 0.35);
+  color: #d8b4fe;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.universe-mode-tag {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(234, 229, 236, 0.8);
+}
+
+/* Modal Header Badges */
+.rpg-modal-header-chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.rpg-track-badge {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.22);
+  border: 1px solid rgba(194, 164, 255, 0.45);
+  color: #e9d5ff;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Dedicated Project Showcase Section */
+.rpg-project-showcase-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(194, 164, 255, 0.14);
+}
+
+.rpg-project-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rpg-project-section-title h5 {
+  margin: 0;
+}
+
+.rpg-project-cat-badge {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.22);
+  color: var(--accentColor);
+  text-transform: uppercase;
+}
+
+/* Featured Project Card */
+.rpg-project-card {
+  border: 1px solid rgba(194, 164, 255, 0.22);
+  border-radius: 10px;
+  padding: 20px;
+  background: rgba(194, 164, 255, 0.035);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.rpg-project-card:hover {
+  border-color: rgba(194, 164, 255, 0.35);
+  background: rgba(194, 164, 255, 0.05);
+}
+
+.rpg-project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.rpg-project-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rpg-project-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.rpg-repo-meta {
+  font-family: monospace;
+  font-size: 11px;
+  color: rgba(234, 229, 236, 0.6);
+  letter-spacing: 0.4px;
+}
+
+/* Prominent View Project Action */
+.rpg-view-project-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 6px;
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.3) 0%,
+    rgba(194, 164, 255, 0.2) 100%
+  );
+  border: 1px solid rgba(194, 164, 255, 0.45);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+}
+
+.rpg-view-project-btn:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.5) 0%,
+    rgba(194, 164, 255, 0.35) 100%
+  );
+  border-color: rgba(194, 164, 255, 0.8);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.45);
+  transform: translateY(-1.5px);
+  color: #ffffff;
+}
+
+.rpg-view-project-btn svg {
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.rpg-view-project-btn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Project Media Container */
+.rpg-project-media {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 220px;
+  border: 1px solid rgba(194, 164, 255, 0.16);
+  background: #000000;
+}
+
+.rpg-project-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.rpg-project-media-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 8, 12, 0.1) 0%,
+    rgba(11, 8, 12, 0.5) 100%
+  );
+}
+
+/* Project Description */
+.rpg-project-desc-wrap {
+  padding: 2px 0;
+}
+
+.rpg-project-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(234, 229, 236, 0.88);
+  margin: 0;
+  font-weight: 350;
+}
+
+/* Features Block */
+.rpg-project-features-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rpg-sub-label {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--accentColor);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.rpg-project-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rpg-project-features-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(234, 229, 236, 0.82);
+}
+
+.rpg-project-features-list li .feature-bullet {
+  color: var(--accentColor);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* Categorized Tech Stack Grid */
+.rpg-project-tech-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(194, 164, 255, 0.16);
+}
+
+.rpg-tech-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.rpg-tech-group-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(194, 164, 255, 0.025);
+  border: 1px solid rgba(194, 164, 255, 0.12);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.rpg-tech-group-name {
+  font-family: monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.6px;
+  color: rgba(234, 229, 236, 0.65);
+  text-transform: uppercase;
+}
+
+.rpg-tech-group-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.rpg-tech-chip {
+  font-family: monospace;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(194, 164, 255, 0.22);
+  color: #f3e8ff;
+}
+
+/* Certificate Actions */
+.modal-cert-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-cert-view-btn.pending-btn {
+  background: rgba(194, 164, 255, 0.08);
+  border-color: rgba(194, 164, 255, 0.25);
+  color: #d8b4fe;
+}
+
+.modal-cert-view-btn.pending-btn:hover {
+  background: rgba(194, 164, 255, 0.16);
+  border-color: rgba(194, 164, 255, 0.45);
+  color: #ffffff;
+}
+
+/* ==========================================================
+   08. WHITE MODE / LIGHT THEME SUPPORT
+   ========================================================== */
+@media (prefers-color-scheme: light) {
+  body.light-theme .rpg-project-card,
+  .white-mode .rpg-project-card,
+  [data-theme="light"] .rpg-project-card {
+    background: #fbf9fd;
+    border-color: rgba(168, 85, 247, 0.22);
+  }
+
+  body.light-theme .rpg-project-name,
+  .white-mode .rpg-project-name,
+  [data-theme="light"] .rpg-project-name {
+    color: #1a1622;
+  }
+
+  body.light-theme .rpg-project-desc,
+  .white-mode .rpg-project-desc,
+  [data-theme="light"] .rpg-project-desc {
+    color: #3b3548;
+  }
+
+  body.light-theme .rpg-project-features-list li,
+  .white-mode .rpg-project-features-list li,
+  [data-theme="light"] .rpg-project-features-list li {
+    color: #3b3548;
+  }
+
+  body.light-theme .rpg-tech-group-item,
+  .white-mode .rpg-tech-group-item,
+  [data-theme="light"] .rpg-tech-group-item {
+    background: #f4effa;
+    border-color: rgba(168, 85, 247, 0.18);
+  }
+
+  body.light-theme .rpg-tech-chip,
+  .white-mode .rpg-tech-chip,
+  [data-theme="light"] .rpg-tech-chip {
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(168, 85, 247, 0.25);
+    color: #6b21a8;
+  }
+
+  body.light-theme .universe-mode-tag,
+  .white-mode .universe-mode-tag,
+  [data-theme="light"] .universe-mode-tag {
+    background: #ede8f5;
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #4b3f5a;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .rpg-project-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .rpg-project-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .rpg-view-project-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .rpg-tech-groups-grid {
+    grid-template-columns: 1fr;
+  }
+  .rpg-live-links-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Project Actions & Live Work Buttons */
+.rpg-project-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rpg-view-project-btn.admin-btn {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(194, 164, 255, 0.3);
+  color: #d8b4fe;
+}
+
+.rpg-view-project-btn.admin-btn:hover {
+  background: rgba(168, 85, 247, 0.28);
+  border-color: rgba(194, 164, 255, 0.6);
+  color: #ffffff;
+}
+
+.rpg-link-badge {
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f3e8ff;
+  text-transform: uppercase;
+}
+
+/* Dedicated Live Work Deployments Section */
+.rpg-live-links-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(168, 85, 247, 0.04);
+  border: 1px solid rgba(194, 164, 255, 0.18);
+  border-radius: 8px;
+}
+
+.rpg-live-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.rpg-live-link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 7px;
+  background: rgba(194, 164, 255, 0.04);
+  border: 1px solid rgba(194, 164, 255, 0.22);
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.rpg-live-link-card:hover {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(194, 164, 255, 0.55);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+}
+
+.rpg-live-link-card.admin-card {
+  border-style: dashed;
+}
+
+.rpg-live-link-card.admin-card:hover {
+  border-style: solid;
+}
+
+.rpg-live-link-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rpg-live-link-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.live-status-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseLive 2s infinite;
+}
+
+@keyframes pulseLive {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+.rpg-live-link-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.rpg-live-badge {
+  font-family: monospace;
+  font-size: 9.5px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(194, 164, 255, 0.3);
+  color: #d8b4fe;
+  text-transform: uppercase;
+}
+
+.rpg-live-link-url {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--accentColor);
+  letter-spacing: 0.2px;
+}
+
+.rpg-live-link-desc {
+  font-size: 11.5px;
+  color: rgba(234, 229, 236, 0.65);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.rpg-live-link-arrow {
+  color: var(--accentColor);
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.rpg-live-link-card:hover .rpg-live-link-arrow {
+  transform: translate(2px, -2px);
+  color: #ffffff;
 }
